@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/DrakesCraft-Labs/AxGraves-Drakes/main/banner.svg" width="100%" alt="AXGRAVES animated banner" />
+  <img src="https://raw.githubusercontent.com/SlimefunNewHorizons/AxGraves-Drakes/main/banner.svg" width="100%" alt="AXGRAVES animated banner" />
 </p>
 
 # AxGraves Drake
@@ -122,7 +122,7 @@ The shaded jar is produced at `target/AxGraves-<version>-Drake-all.jar`.
 
 ## 📄 License & Upstream Attribution
 
-This project is a sovereign fork maintained by [**JackStar6677-1**](https://github.com/JackStar6677-1) under [**DrakesCraft Labs**](https://github.com/DrakesCraft-Labs).
+This project is a sovereign fork maintained by [**JackStar6677-1**](https://github.com/JackStar6677-1) under [**DrakesCraft Labs**](https://github.com/SlimefunNewHorizons).
 
 - **Original Project:** Created by the upstream authors and the open-source community.
 - **DrakesCraft Optimizations:** Modernized for Paper/Purpur 1.21.11+, Java 21, high concurrency, asynchronous safety, and exploit/duplication prevention.
