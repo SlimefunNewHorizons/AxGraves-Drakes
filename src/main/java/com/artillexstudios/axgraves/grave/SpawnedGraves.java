@@ -19,8 +19,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -88,23 +90,16 @@ public class SpawnedGraves {
     }
 
     public static boolean saveToFile() {
-        final JsonArray array = new JsonArray(graves.size());
-
+        List<SavedGrave> savedGraves = new ArrayList<>();
         for (Grave grave : graves) {
-            final JsonObject obj = new JsonObject();
-            obj.addProperty("location", Serializers.LOCATION.serialize(grave.getLocation()));
-            obj.addProperty("owner", grave.getPlayer().getUniqueId().toString());
-            obj.addProperty("items", Base64.getEncoder().encodeToString(Serializers.ITEM_ARRAY.serialize(grave.getGui().getContents())));
-            obj.addProperty("xp", grave.getStoredXP());
-            obj.addProperty("date", grave.getSpawned());
-
-            array.add(obj);
+            SavedGrave savedGrave = SavedGrave.create(grave);
+            savedGraves.add(savedGrave);
         }
 
         File file = new File(AxGraves.getInstance().getDataFolder(), "data.json");
         File temporary = new File(AxGraves.getInstance().getDataFolder(), "data.json.tmp");
         try (FileWriter fw = new FileWriter(temporary)) {
-            gson.toJson(array, fw);
+            gson.toJson(savedGraves, fw);
             fw.flush();
             try {
                 Files.move(temporary.toPath(), file.toPath(), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
@@ -120,29 +115,22 @@ public class SpawnedGraves {
     }
 
     public static void loadFromFile() {
-        JsonArray array;
         File file = new File(AxGraves.getInstance().getDataFolder(), "data.json");
+        if (!file.exists()) return;
+        SavedGrave[] savedGraves;
         try (FileReader fw = new FileReader(file)) {
-            array = gson.fromJson(fw, JsonArray.class);
-        } catch (Exception ex) {
-            return;
-        }
-        if (array == null) return;
-
-        try {
-            for (JsonElement el : array) {
-                JsonObject obj = el.getAsJsonObject();
-                Location location = Serializers.LOCATION.deserialize(obj.get("location").getAsString());
-                if (location == null || location.getWorld() == null) continue;
-                OfflinePlayer owner = Bukkit.getOfflinePlayer(UUID.fromString(obj.get("owner").getAsString()));
-                String itStr = obj.get("items").getAsString();
-                ItemStack[] items = Serializers.ITEM_ARRAY.deserialize(Base64.getDecoder().decode(itStr));
-                int xp = obj.get("xp").getAsInt();
-                long date = obj.get("date").getAsLong();
-                addGrave(new Grave(location, owner, Arrays.asList(items), xp, date));
-            }
+            savedGraves = gson.fromJson(fw, SavedGrave[].class);
         } catch (Exception ex) {
             ex.printStackTrace();
+            return;
+        }
+        file.delete();
+        if (savedGraves == null) return;
+
+        for (SavedGrave savedGrave : savedGraves) {
+            Grave grave = savedGrave.load();
+            if (grave == null) continue;
+            addGrave(grave);
         }
     }
 }
