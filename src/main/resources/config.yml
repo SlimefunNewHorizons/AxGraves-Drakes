@@ -110,6 +110,42 @@ spawn-height-limits:
   world_the_end:
     min: 0
     max: 319
+  bskyblock_world:
+    min: 1
+    max: 319
+  bskyblock_world_nether:
+    min: 1
+    max: 255
+  bskyblock_world_the_end:
+    min: 1
+    max: 255
+  oneblock_world:
+    min: 1
+    max: 319
+  oneblock_world_nether:
+    min: 1
+    max: 255
+  oneblock_world_the_end:
+    min: 1
+    max: 255
+  onechunk_world:
+    min: 1
+    max: 319
+  onechunk_world_nether:
+    min: 1
+    max: 255
+  onechunk_world_the_end:
+    min: 1
+    max: 255
+  clasico:
+    min: -64
+    max: 319
+  clasico_nether:
+    min: 0
+    max: 319
+  clasico_the_end:
+    min: 0
+    max: 319
 
 # you must define at least 1
 # requires a restart to update
