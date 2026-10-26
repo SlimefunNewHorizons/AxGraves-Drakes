@@ -33,11 +33,12 @@ public final class SlimefunHook {
         }
 
         try {
-            Class<?> utilsClass = Class.forName(
-                    "com.github.drakescraft_labs.slimefun4.utils.SlimefunUtils",
-                    true,
-                    slimefun.getClass().getClassLoader()
-            );
+            Class<?> utilsClass = null;
+            try {
+                utilsClass = Class.forName("io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils", true, slimefun.getClass().getClassLoader());
+            } catch (ClassNotFoundException ignored) {
+                utilsClass = Class.forName("com.github.drakescraft_labs.slimefun4.utils.SlimefunUtils", true, slimefun.getClass().getClassLoader());
+            }
             soulboundMethod = findSoulboundMethod(utilsClass);
         } catch (ReflectiveOperationException | LinkageError ex) {
             logDetectionFailure(ex);
