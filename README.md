@@ -2,37 +2,36 @@
   <img src="https://raw.githubusercontent.com/SlimefunNewHorizons/AxGraves-Drakes/main/banner.svg" width="100%" alt="AXGRAVES animated banner" />
 </p>
 
-# AxGraves Drake
+# AxGraves-Drakes
 
-> ### 🏰 ¡Únete a la Comunidad Oficial de DrakesCraft!
-> 
-> * 🎮 **IP del Servidor**: `play.drakescraft.cl` *(Java 1.21.11 & Bedrock)*
-> * 💬 **Discord Oficial**: [discord.gg/drakescraft](https://discord.gg/rv3vtXZTk7)
-> * 🌐 **Web & Guía**: [web.drakescraft.cl](https://web.drakescraft.cl) — 🛒 **Tienda**: [web.drakescraft.cl/store](https://web.drakescraft.cl/store.html)
-> 
-> *¡Juega con este addon y más de 80 expansiones optimizadas en vivo en nuestra network de supervivencia técnica!*
+> ### 🏰 Comunidad Oficial de DrakesCraft
+>
+> * 🎮 **IP del Servidor**: `mc.drakescraft.cl` *(Java & Bedrock)*
+> * 💬 **Discord Oficial**: [discord.gg/rv3vtXZTk7](https://discord.gg/rv3vtXZTk7)
+> * 🌐 **Portal Web & Guía**: [web.drakescraft.cl](https://web.drakescraft.cl)
+> * 🛒 **Tienda Oficial**: [drakescraft-v2.tebex.io](https://drakescraft-v2.tebex.io)
 
 ---
 
-> Estado: preparado para Paper/Purpur 1.21.11 y Java 21. El artefacto se valida
-> localmente antes de cualquier ventana de despliegue.
+> **Estado (Temporada 2 — rama `port-26x`):** Probado en producción sobre **Purpur 26.2** y **Java 25** (bytecode Java 21 compatible con Java 21–25). También disponible como módulo integrado (`axgraves`) en `drakes-server` dentro de [Drakes-Suites](https://github.com/SlimefunNewHorizons/Drakes-Suites).
 
-A Minecraft plugin that creates a death chest (grave) at the location where a player dies, so they can recover their items.
+A Minecraft plugin fork maintained for DrakesCraft that creates a persistent death chest (grave) at the location where a player dies so they can safely recover their items and XP, with Soulbound anti-duplication guards for Slimefun.
 
 ## Features
 
-- Drops a grave chest containing all of the player's items at the death location.
-- Stores the player's XP inside the grave.
+- Creates a protected grave storing the player's items and XP at the death location.
 - Configurable despawn timer, per-player grave limits, world filters, and death-cause blacklists.
-- Optional rotation and holograms for the grave entity.
-- Folia-compatible (regionised multithreading).
+- Optional grave rotation and holograms.
+- Persistent storage across restarts (`axgraves.db` / SQLite).
+- Folia-compatible (`folia-supported: true`).
+- Zero telemetry, zero external update checks.
 
 ## Configuration
 
 All options live in `plugins/AxGraves/config.yml` (auto-generated on first run). Notable keys:
 
 | Key | Default | Description |
-|---|---|---|
+| :--- | :--- | :--- |
 | `despawn-time-seconds` | `468000` (130 hours) | Seconds before an empty / expired grave is removed. Set to `-1` to disable. |
 | `drop-items` | `true` | Whether remaining items fall to the ground when the grave expires. |
 | `store-items` | `true` | Whether to move items into the grave. |
@@ -48,7 +47,7 @@ All options live in `plugins/AxGraves/config.yml` (auto-generated on first run).
 ## Commands
 
 | Command | Description | Permission |
-|---|---|---|
+| :--- | :--- | :--- |
 | `/graves help` | Show the in-game help. | `axgraves.help` |
 | `/graves reload` | Reload `config.yml` and `messages.yml`. | `axgraves.reload` |
 | `/graves list [player]` | List your (or another player's) active graves. | `axgraves.list` / `axgraves.list.other` |
@@ -57,7 +56,7 @@ All options live in `plugins/AxGraves/config.yml` (auto-generated on first run).
 ## Permissions
 
 | Permission | Default | Description |
-|---|---|---|
+| :--- | :--- | :--- |
 | `axgraves.allowgraves` | `true` | Allow grave creation on death. |
 | `axgraves.list` | `true` | List your own graves. |
 | `axgraves.list.other` | `op` | List any player's graves. |
@@ -68,48 +67,28 @@ All options live in `plugins/AxGraves/config.yml` (auto-generated on first run).
 
 ## Placeholders
 
-The plugin registers an identifier under `axgraves`. Available placeholders:
-
-- `%axgraves_despawn-time_<graveId>%` — time remaining until a specific grave despawns.
-- `%axgraves_despawn-time%` — despawn-time fallback for messages.
-
-## PlaceholderAPI placeholders
-
-When PlaceholderAPI is installed, the following player-scoped tokens are exposed:
-
-- `%axgraves_grave_count%` — number of active graves owned by the player.
-- `%axgraves_has_grave%` — `true` / `false`.
+- Internal: `%axgraves_despawn-time_<graveId>%`, `%axgraves_despawn-time%`
+- PlaceholderAPI: `%axgraves_grave_count%`, `%axgraves_has_grave%`
 
 ## Compatibility
 
 | Server | Supported |
-|---|---|
-| Spigot 1.20.x | Yes |
-| Paper 1.20.x – 1.21.x | Yes |
-| Purpur 1.21.x | Yes |
+| :--- | :--- |
+| Purpur **26.2** (Season 2 production) | Yes |
+| Paper / Purpur **1.21.x** | Yes |
 | Folia | Yes (`folia-supported: true`) |
 
-Requires **Java 21** on the server JVM.
+Compiled with **JDK 21** bytecode; runs on **Java 21** and **Java 25** (LTS). Version: `1.32.1-Drake.1`.
 
-## Soft Dependencies
+## Soft Dependencies & Operación Drake
 
-- **Slimefun** — When present, items marked as `Soulbound` (either through the `Soulbound` interface
-  or via the `Soulbound Rune` lore flag) **are excluded** from the grave to prevent duplication.
-  AxGraves works normally when Slimefun is absent.
-
-## Operaci\u00f3n Drake
-
-- La decisi\u00f3n de conservar un objeto Soulbound pertenece a Slimefun; AxGraves
-  excluye esos objetos de la tumba y restaura los casos pendientes al reconectar.
-  Esto evita que ambos sistemas entreguen el mismo objeto.
-- MoreGraves debe mantenerse deshabilitado antes de instalar este fork. No se
-  deben cargar dos plugins de tumbas a la vez.
-- El fork no ejecuta comprobaciones de actualizaciones, descargas autom\u00e1ticas ni
-  telemetr\u00eda externa. Los JAR se revisan y despliegan de forma controlada.
+- **Slimefun (`Soulbound` Anti-Dupe):** La decisión de conservar un objeto Soulbound pertenece a Slimefun; `AxGraves-Drakes` excluye los ítems marcados como `Soulbound` (por interfaz o lore de `Soulbound Rune`) de la tumba y restaura los casos pendientes al reconectar para evitar duplicaciones. Funciona con normalidad si Slimefun no está instalado.
+- **Exclusividad:** No cargar otro plugin de tumbas en paralelo (p. ej. `MoreGraves` debe mantenerse deshabilitado).
+- **Sin telemetría:** Este fork no ejecuta comprobaciones de actualizaciones ni descargas automáticas externas.
 
 ## Building
 
-Requirements: JDK 21 and Maven 3.8+.
+Requirements: **JDK 21+** and **Maven 3.8+**.
 
 ```bash
 mvn clean test
@@ -122,8 +101,8 @@ The shaded jar is produced at `target/AxGraves-<version>-Drake-all.jar`.
 
 ## 📄 License & Upstream Attribution
 
-This project is a sovereign fork maintained by [**JackStar6677-1**](https://github.com/JackStar6677-1) under [**DrakesCraft Labs**](https://github.com/SlimefunNewHorizons).
+This project is a sovereign fork maintained by [**JackStar6677-1**](https://github.com/JackStar6677-1) and **Chagui68** under [**DrakesCraft Labs**](https://github.com/SlimefunNewHorizons).
 
-- **Original Project:** Created by the upstream authors and the open-source community.
-- **DrakesCraft Optimizations:** Modernized for Paper/Purpur 1.21.11+, Java 21, high concurrency, asynchronous safety, and exploit/duplication prevention.
-- **License:** Distributed under the original **GNU General Public License v3.0 (GPLv3)** (or original upstream license). See the [LICENSE](LICENSE) file for complete terms.
+- **Original Project:** Created by Artillex-Studios and the open-source community.
+- **DrakesCraft Optimizations:** Modernized for Purpur 26.2 / Paper 1.21.x+, Java 21–25, high concurrency, asynchronous safety, and Soulbound anti-duplication guards.
+- **License:** Distributed under the original **GNU General Public License v3.0 (GPLv3)**. See the [`LICENSE`](LICENSE) file for complete terms.
